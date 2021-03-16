@@ -58,7 +58,7 @@ def get_prcp():
     a_year_ago = dt.date(2017, 8, 23) - dt.timedelta(days=365)
 
     results = session.query(Measurement.date, Measurement.prcp).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) > a_year_ago).all()
+        filter(Measurement.date > a_year_ago).all()
 
     # making empty dictionary to populate with data
     result_dict = {}
@@ -108,7 +108,7 @@ def get_tobs():
 
     # temps and dates over last year from most active station
     temp_list = session.query(Measurement.date, Measurement.tobs).filter(Measurement.station == station_one).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) > a_year_ago).all()
+        filter(Measurement.date > a_year_ago).all()
 
     # temps in list with out tuples
     new_temp_list = [x[1] for x in temp_list]
@@ -129,17 +129,17 @@ def begin(start):
     # calculating min temp in range using query
     # the [0][0] at the end is to pull it out of list and tuple
     tmin = session.query(func.min(Measurement.tobs)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) >= func.strftime('%Y-%m-%d', start)).all()[0][0]
+        filter(Measurement.date >= start).all()[0][0]
 
     # calculating avg temp in range using query
     # the [0][0] at the end is to pull it out of list and tuple
     tavg = session.query(func.avg(Measurement.tobs)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) >= func.strftime('%Y-%m-%d', start)).all()[0][0]
+        filter(Measurement.date >= start).all()[0][0]
 
     # calculating max temp in range using query
     # the [0][0] at the end is to pull it out of list and tuple
     tmax = session.query(func.max(Measurement.tobs)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) >= func.strftime('%Y-%m-%d', start)).all()[0][0]
+        filter(Measurement.date >= start).all()[0][0]
 
     # making list that will be jsonified
     t_list = [tmin, tavg, tmax]
@@ -160,20 +160,20 @@ def end(start, end):
     # calculating min temp in range using query
     # the [0][0] at the end is to pull it out of list and tuple
     tmin = session.query(func.min(Measurement.tobs)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) >= func.strftime('%Y-%m-%d', start)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) <= func.strftime('%Y-%m-%d', end)).all()[0][0]
+        filter(Measurement.date >= start).\
+        filter(Measurement.date <= end).all()[0][0]
 
     # calculating avg temp in range using query
     # the [0][0] at the end is to pull it out of list and tuple
     tavg = session.query(func.avg(Measurement.tobs)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) >= func.strftime('%Y-%m-%d', start)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) <= func.strftime('%Y-%m-%d', end)).all()[0][0]
+        filter(Measurement.date >= start).\
+        filter(Measurement.date <= end).all()[0][0]
 
     # calculating max temp in range using query
     # the [0][0] at the end is to pull it out of list and tuple
     tmax = session.query(func.max(Measurement.tobs)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) >= func.strftime('%Y-%m-%d', start)).\
-        filter(func.strftime('%Y-%m-%d', Measurement.date) <= func.strftime('%Y-%m-%d', end)).all()[0][0]
+        filter(Measurement.date >= start).\
+        filter(Measurement.date <= end).all()[0][0]
 
     # making a list to return jsonifyed
     t_list = [tmin, tavg, tmax]
